@@ -11,20 +11,23 @@ defmodule ElixirScript.Translator.Match do
     { patterns, params, env } = PatternMatching.process_match([left], env)
 
       declarator = JS.variable_declarator(
-        JS.array_pattern(params),
+      JS.array_pattern(params),
+      JS.yield_expression(
         JS.call_expression(
           JS.member_expression(
             JS.member_expression(
               JS.member_expression(
-              JS.identifier("Elixir"),
-              JS.identifier("Core")
+                JS.identifier("Elixir"),
+                JS.identifier("Core")
               ),
               JS.identifier("Patterns")
             ),
             JS.identifier("match")
           ),
           [hd(patterns), right_ast]
-        )
+        ),
+        true
+      )
       )
 
     array_pattern = JS.variable_declaration([declarator], :let)

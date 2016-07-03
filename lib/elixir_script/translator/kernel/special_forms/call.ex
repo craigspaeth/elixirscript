@@ -5,8 +5,7 @@ defmodule ElixirScript.Translator.Call do
   alias ElixirScript.Translator.Utils
   alias ElixirScript.Translator.Identifier
 
-
-  def make_function_or_property_call(module_name, function_name, env) do
+  def make_function_or_property_call(module_name, function_name, %ElixirScript.Translator.LexicalScope{ context: :guard } = env) do
     the_name = get_module_name_for_function(module_name, env)
 
     js_ast = JS.call_expression(
@@ -25,6 +24,52 @@ defmodule ElixirScript.Translator.Call do
         Translator.translate!(to_string(function_name), env)
       ]
     )
+
+    { js_ast, env }
+  end
+
+  def make_function_or_property_call(module_name, function_name, env) do
+    the_name = get_module_name_for_function(module_name, env)
+
+    member_expression = make_module_expression_tree(the_name, false, env)
+
+    context = case member_expression do
+                %ESTree.MemberExpression{} ->
+                  member_expression.object
+                _ ->
+                  nil
+              end
+
+    js_ast =
+      JS.call_expression(
+        JS.member_expression(
+          JS.member_expression(
+            JS.identifier("Elixir"),
+            JS.member_expression(
+              JS.identifier("Core"),
+              JS.identifier("Functions")
+            )
+          ),
+          JS.identifier("run")
+        ),
+        [
+          JS.member_expression(
+            JS.member_expression(
+              JS.identifier("Elixir"),
+              JS.member_expression(
+                JS.identifier("Core"),
+                JS.identifier("Functions")
+              )
+            ),
+            JS.identifier("call_property")
+          ),
+          JS.array_expression([
+            member_expression,
+            Translator.translate!(to_string(function_name), env),
+            context
+          ])
+        ]
+      )
 
     { js_ast, env }
   end
@@ -57,13 +102,40 @@ defmodule ElixirScript.Translator.Call do
     { make_call_expression(function_name, params, env), env }
   end
 
-  def make_function_call(module_name, function_name, params, env) when is_list(module_name) do
+  def make_function_call(module_name, function_name, params, %ElixirScript.Translator.LexicalScope{ context: :guard } = env) when is_list(module_name) do
     call = JS.call_expression(
       JS.member_expression(
         Translator.translate!(module_name, env),
         Identifier.make_identifier(function_name)
       ),
       Enum.map(params, &Translator.translate!(&1, env))
+    )
+
+
+
+    { call, env }
+  end
+
+  def make_function_call(module_name, function_name, params, env) when is_list(module_name) do
+    call = JS.call_expression(
+      JS.member_expression(
+        JS.member_expression(
+          JS.identifier("Elixir"),
+          JS.member_expression(
+            JS.identifier("Core"),
+            JS.identifier("Functions")
+          )
+        ),
+        JS.identifier("run")
+      ),
+      [
+        JS.member_expression(
+          Translator.translate!(module_name, env),
+          Identifier.make_identifier(function_name)
+        ),
+        JS.array_expression(Enum.map(params, &Translator.translate!(&1, env))),
+        Translator.translate!(module_name, env)
+      ]
     )
 
     { call, env }
@@ -74,27 +146,95 @@ defmodule ElixirScript.Translator.Call do
     { make_call_expression(the_name, function_name, params, env), env }
   end
 
-  defp make_call_expression(module_name, function_name, params, env) do
+
+  defp make_call_expression(module_name, function_name, params, %ElixirScript.Translator.LexicalScope{ context: :guard } = env) do
     JS.call_expression(
       make_member_expression(module_name, function_name, env),
       Enum.map(params, &Translator.translate!(&1, env))
     )
   end
 
-  defp make_call_expression(function_name, params, env) when is_tuple(function_name) do
+  defp make_call_expression(module_name, function_name, params, env) do
+    member_expression = make_member_expression(module_name, function_name, env)
+
+    context = case member_expression do
+                %ESTree.MemberExpression{} ->
+                  member_expression.object
+                _ ->
+                  nil
+              end
+
+
+      JS.call_expression(
+        JS.member_expression(
+          JS.member_expression(
+            JS.identifier("Elixir"),
+            JS.member_expression(
+              JS.identifier("Core"),
+              JS.identifier("Functions")
+            )
+          ),
+          JS.identifier("run")
+        ),
+        [
+          member_expression,
+          JS.array_expression(Enum.map(params, &Translator.translate!(&1, env))),
+          context
+        ]
+      )
+  end
+
+  defp make_call_expression(function_name, params, %ElixirScript.Translator.LexicalScope{ context: :guard } = env) when is_tuple(function_name) do
     JS.call_expression(
       Translator.translate!(function_name, env),
       Enum.map(params, &Translator.translate!(&1, env))
     )
   end
 
-  defp make_call_expression(function_name, params, env) do
+  defp make_call_expression(function_name, params, env) when is_tuple(function_name) do
+      JS.call_expression(
+        JS.member_expression(
+          JS.member_expression(
+            JS.identifier("Elixir"),
+            JS.member_expression(
+              JS.identifier("Core"),
+              JS.identifier("Functions")
+            )
+          ),
+          JS.identifier("run")
+        ),
+        [
+          Translator.translate!(function_name, env),
+          JS.array_expression(Enum.map(params, &Translator.translate!(&1, env)))
+        ]
+      )
+  end
+
+  defp make_call_expression(function_name, params, %ElixirScript.Translator.LexicalScope{ context: :guard } = env) do
     JS.call_expression(
       Identifier.make_identifier(function_name),
       Enum.map(params, &Translator.translate!(&1, env))
     )
   end
 
+  defp make_call_expression(function_name, params, env) do
+      JS.call_expression(
+        JS.member_expression(
+          JS.member_expression(
+            JS.identifier("Elixir"),
+            JS.member_expression(
+              JS.identifier("Core"),
+              JS.identifier("Functions")
+            )
+          ),
+          JS.identifier("run")
+        ),
+        [
+          Identifier.make_identifier(function_name),
+          JS.array_expression(Enum.map(params, &Translator.translate!(&1, env)))
+        ]
+      )
+  end
 
   def get_js_name([Elixir | _] = list, _) do
     list

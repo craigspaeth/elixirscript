@@ -467,10 +467,6 @@ defmodule ElixirScript.Translator do
     {js, env}
   end
 
-  defp do_translate({:receive, _, _ }, %LexicalScope{ in_process: false}) do
-    raise ElixirScript.Translator.UnsupportedError, "receive outside of a process"
-  end
-
   defp do_translate({:receive, _, [expressions] }, env) do
     Receive.make_receive(expressions, env)
   end

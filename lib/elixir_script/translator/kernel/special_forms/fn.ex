@@ -50,7 +50,7 @@ defmodule ElixirScript.Translator.Function do
     JS.call_expression(
       JS.member_expression(
         @patterns,
-        JS.identifier("defmatch")
+        JS.identifier("defmatchgen")
       ),
       clauses
     )
@@ -106,12 +106,12 @@ defmodule ElixirScript.Translator.Function do
                   nil ->
                     [
                       JS.array_expression(patterns),
-                      JS.function_expression(params, [], body)
+                      JS.function_expression(params, [], body, true)
                     ]
                   _ ->
                     [
                       JS.array_expression(patterns),
-                      JS.function_expression(params, [], body),
+                      JS.function_expression(params, [], body, true),
                       JS.function_expression(params, [], guard_body)
                     ]
                 end
@@ -145,8 +145,8 @@ defmodule ElixirScript.Translator.Function do
     end
 
     list = Group.inflate_groups(list)
-    |> Enum.map(fn(x) -> Block.process_call(x, env) end)
     |> return_last_expression
+    |> Enum.map(fn(x) -> Block.process_call(x, env) end)
 
     { list, env }
   end

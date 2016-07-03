@@ -116,8 +116,8 @@ defmodule ElixirScript.Kernel do
     false
   end
 
-  def is_reference(_) do
-    false
+  def is_reference(term) do
+    JS.instanceof(term, Elixir.Core.Reference)
   end
 
   def length(term) do
