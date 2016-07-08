@@ -63,7 +63,19 @@ defmodule ElixirScript.Translator.Defmodule do
   end
 
   def translate_body(body, env) do
-    { body, env } = Translator.translate(body, env)
+    body = case body do
+             {:__block__, _, list} ->
+               list
+             _ ->
+               [body]
+           end
+
+    { body, env } = body
+    |> Enum.map_reduce(env, fn(x, updated_env) ->
+      Translator.translate(x, updated_env)
+    end)
+
+    body = JS.block_statement(body)
 
     body = case body do
       [%ESTree.BlockStatement{ body: body }] ->

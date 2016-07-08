@@ -31,6 +31,15 @@ defmodule ElixirScript.Translator.Block do
        }
       } ->
         JS.yield_expression(item, true)
+
+      %ESTree.VariableDeclaration{
+        declarations: [
+          %ESTree.VariableDeclarator{} = declarator
+        ]
+      } = ast ->
+        declarator = %{ declarator | init: JS.yield_expression(declarator.init, true) }
+        %{ ast | declarations: [declarator] }
+
       %ESTree.ReturnStatement{ argument: %ESTree.YieldExpression{}} ->
         item
       %ESTree.ReturnStatement{} ->

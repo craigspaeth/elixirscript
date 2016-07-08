@@ -12,7 +12,6 @@ defmodule ElixirScript.Translator.Match do
 
       declarator = JS.variable_declarator(
       JS.array_pattern(params),
-      JS.yield_expression(
         JS.call_expression(
           JS.member_expression(
             JS.member_expression(
@@ -27,7 +26,6 @@ defmodule ElixirScript.Translator.Match do
           [hd(patterns), right_ast]
         ),
         true
-      )
       )
 
     array_pattern = JS.variable_declaration([declarator], :let)
