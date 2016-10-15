@@ -73,20 +73,15 @@ defmodule ElixirScript do
   @spec compile_path(binary, Map.t) :: [binary | {binary, binary} | :ok]
   def compile_path(path, opts \\ %{}) do
 
-    {expanded_path, loaded_modules} = case File.dir?(path) do
-                                        true ->
-                                          process_path(path)
-                                        false ->
-                                          {[path], []}
-                                      end
-
-    #deps = if Code.ensure_loaded?(Mix) do
-    #  ElixirScript.Compiler.Deps.get_deps_paths
-    #else
-    #  []
-    #end
-
     opts = build_compiler_options(opts)
+
+    paths = if Code.ensure_loaded?(Mix) do
+      ElixirScript.Compiler.Deps.get_deps_paths ++ [{Mix.Project.config()[:app], [path]}]
+    else
+      [{:app, [path]}]
+    end
+
+    {expanded_path, loaded_modules} = process_paths(paths)
 
     compiler_cache = get_compiler_cache(path, opts)
 
@@ -104,6 +99,24 @@ defmodule ElixirScript do
     result = Output.out(path, code, opts)
     ElixirScript.Translator.State.stop
     result
+  end
+
+  defp process_paths(paths) do
+    Enum.map(paths, fn {app_name, paths} ->
+      results = Enum.map(paths, fn (path) ->
+        case File.dir?(path) do
+          true ->
+            process_path(path)
+          false ->
+            {[path], []}
+        end
+      end)
+      |> Enum.reduce({[], []}, fn {expanded_path, loaded_modules}, {s1, s2} ->
+        {s1 ++ expanded_path, s2 ++ loaded_modules}
+      end)
+
+      {app_name, results}
+    end)
   end
 
   defp process_path(path) do
