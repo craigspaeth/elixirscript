@@ -84,7 +84,6 @@ defmodule ElixirScript do
     {expanded_path, loaded_modules} = process_paths(paths)
 
     compiler_cache = get_compiler_cache(path, opts)
-
     new_file_stats = Cache.build_file_stats(expanded_path)
 
     changed_files = Cache.get_changed_files(compiler_cache.input_files, new_file_stats)
@@ -195,7 +194,7 @@ defmodule ElixirScript do
 
   @doc false
   def compile_std_lib(output_path) do
-    compiler_opts = build_compiler_options(%{std_lib: true, include_path: true, output: output_path})
+    compiler_opts = build_compiler_options(%{std_lib: true, include_path: true, output: output_path, app: :elixir})
     libs_path = Path.join([__DIR__, "elixir_script", "prelude", "**", "*.ex"])
 
     code = Path.wildcard(libs_path)
@@ -205,14 +204,16 @@ defmodule ElixirScript do
 
     code
     |> Enum.map(&update_quoted(&1))
-    |> ModuleCollector.process_modules(:elixir)
+    |> ModuleCollector.process_modules(compiler_opts[:app])
 
     code = create_code(compiler_opts, ElixirScript.Translator.State.get)
     |> Enum.filter(fn({path, _, _}) -> !String.contains?(path, "ElixirScript.Temp.js") end)
 
     new_std_state = ElixirScript.Translator.State.serialize()
 
-    File.write!(File.cwd!() <> "/lib/elixir_script/translator/stdlib_state.bin", new_std_state)
+    stdlib_state_path = Path.join([File.cwd!(), "lib", "elixir_script", "translator", "stdlib_state.bin"])
+
+    File.write!(stdlib_state_path, new_std_state)
     result = Output.out(libs_path, code, compiler_opts)
 
     ElixirScript.Translator.State.stop
@@ -228,7 +229,7 @@ defmodule ElixirScript do
 
     quoted_code_list
     |> Enum.map(&update_quoted(&1))
-    |> ModuleCollector.process_modules(:app)
+    |> ModuleCollector.process_modules(compiler_opts[:app])
 
     code = create_code(compiler_opts, ElixirScript.Translator.State.get)
     new_state = ElixirScript.Translator.State.serialize()
@@ -245,6 +246,7 @@ defmodule ElixirScript do
     |> Map.put(:core_path, "Elixir")
     |> Map.put(:full_build, false)
     |> Map.put(:output, nil)
+    |> Map.put(:app, :app)
 
     Map.merge(default_options, opts)
   end
