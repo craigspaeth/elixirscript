@@ -14,14 +14,6 @@ defmodule ElixirScript.Translator.Function do
     JS.identifier("Patterns")
   )
 
-  @functions JS.member_expression(
-    JS.member_expression(
-      JS.identifier("Elixir"),
-      JS.identifier("Core")
-    ),
-    JS.identifier("Functions")
-  )
-
   def make_anonymous_function(functions, env, name \\ nil) do
     clauses = functions
     |> Enum.map(fn
@@ -185,8 +177,6 @@ defmodule ElixirScript.Translator.Function do
     last_item = List.last(list)
 
     last_item = case last_item do
-      %ESTree.CallExpression{} ->
-        last_item |> trampoline |> JS.return_statement
       %ESTree.YieldExpression{} ->
         JS.return_statement(last_item)
       %ESTree.Literal{} ->
@@ -236,19 +226,5 @@ defmodule ElixirScript.Translator.Function do
     else
       list ++ [last_item]
     end
-  end
-
-  defp trampoline(call) do
-    JS.call_expression(
-      JS.member_expression(
-        @functions,
-        JS.identifier("trampoline")
-      ),
-      [
-        JS.function_expression([], [], JS.block_statement([
-                                 JS.return_statement(call)
-                               ]))
-      ]
-    )
   end
 end
