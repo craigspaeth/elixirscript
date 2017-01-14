@@ -396,6 +396,13 @@ function* sleep_forever(){
   yield* Core.processes.sleep(Symbol("infinity"));
 }
 
+function trampoline(f) {
+  while (f && f instanceof Function) {
+    f = f.apply(f.context, f.args);
+  }
+  return f;
+}
+
 export default {
   call_property,
   apply,
@@ -435,5 +442,6 @@ export default {
   mapfoldl,
   filtermap,
   maps_fold,
-  sleep_forever
+  sleep_forever,
+  trampoline
 };
