@@ -75,8 +75,8 @@ defmodule ElixirScript.Translator.Map.Test do
        %{^key => value} = %{key => value}
     end
     js_code = """
-         let [value1] = Bootstrap.Core.Patterns.match({
-             [key]: Bootstrap.Core.Patterns.variable()
+         let [value1] = __P.match({
+             [key]: __P.variable()
          }, Object.freeze({
              [key]: value
          }));

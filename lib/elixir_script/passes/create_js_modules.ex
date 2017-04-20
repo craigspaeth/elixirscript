@@ -5,7 +5,7 @@ defmodule ElixirScript.Passes.CreateJSModules do
 
   def execute(compiler_data, opts) do
     namespace_modules = Enum.reduce(compiler_data.data, [], fn
-      ({_, %{load_only: true} = module_data}, acc) ->
+      ({_, %{load_only: true}}, acc) ->
         acc
 
       ({module_name, module_data}, acc) ->
@@ -66,21 +66,51 @@ defmodule ElixirScript.Passes.CreateJSModules do
     elixir = JS.variable_declaration([declarator], :const)
 
     table_additions = Enum.map(opts.js_modules, fn
-      {module, path} -> add_import_to_table(module)
-      {module, path, _} -> add_import_to_table(module)
+      {module, _} -> add_import_to_table(module)
+      {module, _, _} -> add_import_to_table(module)
     end)
 
     ast = opts.module_formatter.build(
       [],
       opts.js_modules,
-      [elixir, create_atom_table(), start, load] ++ table_additions ++ body,
+      [elixir, pattern_alias(), function_alias(), create_atom_table(), start(), load()] ++ table_additions ++ body,
       JS.identifier("Elixir")
     )
 
     ast
   end
 
-  def start do
+  def pattern_alias() do
+    declarator = JS.variable_declarator(
+      JS.identifier("__P"),
+      JS.member_expression(
+        JS.identifier("Bootstrap"),
+        JS.member_expression(
+          JS.identifier("Core"),
+          JS.identifier("Patterns")
+        )
+      )
+    )
+
+    JS.variable_declaration([declarator], :const)
+  end
+
+  def function_alias() do
+    declarator = JS.variable_declarator(
+      JS.identifier("__F"),
+      JS.member_expression(
+        JS.identifier("Bootstrap"),
+        JS.member_expression(
+          JS.identifier("Core"),
+          JS.identifier("Functions")
+        )
+      )
+    )
+
+    JS.variable_declaration([declarator], :const)
+  end
+
+  def start() do
     JS.assignment_expression(
       :=,
       JS.member_expression(

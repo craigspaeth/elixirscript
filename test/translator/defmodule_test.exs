@@ -33,23 +33,23 @@ defmodule ElixirScript.Translator.Defmodule.Test do
     end
 
     js_code = """
-         const something = Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([], function() {
+         const something = __P.defmatch(__P.clause([], function() {
              return ul;
          }));
 
          const __info__ = function(kind) {
-                 return Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Symbol.for('functions')], function() {
+                 return __P.defmatch(__P.clause([Symbol.for('functions')], function() {
                      return Object.freeze([new Bootstrap.Core.Tuple(Symbol.for('something'), 0)]);
-                 }), Bootstrap.Core.Patterns.clause([Symbol.for('macros')], function() {
+                 }), __P.clause([Symbol.for('macros')], function() {
                      return Object.freeze([]);
-                 }), Bootstrap.Core.Patterns.clause([Symbol.for('module')], function() {
+                 }), __P.clause([Symbol.for('module')], function() {
                      return Symbol.for('Elixir.Elephant');
                  })).call(this, kind);
              };
 
          const ul = '#todo-list';
 
-         const something_else = Bootstrap.Core.Patterns.defmatchgen(Bootstrap.Core.Patterns.clause([], function*() {
+         const something_else = __P.defmatchgen(__P.clause([], function*() {
              return null;
          }));
     """

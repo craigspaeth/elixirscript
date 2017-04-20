@@ -26,14 +26,8 @@ defmodule ElixirScript.Translator.Defprotocol do
       JS.identifier(Utils.name_to_js_name(name)),
       JS.call_expression(
         JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier(:Core),
-            JS.member_expression(
-              JS.identifier(:Functions),
-              JS.identifier(:defprotocol)
-            )
-          )
+          JS.identifier(:__F),
+          JS.identifier(:defprotocol)
         ),
         [object]
       )
@@ -56,14 +50,8 @@ defmodule ElixirScript.Translator.Defprotocol do
       JS.identifier(implementation_name),
       JS.call_expression(
         JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier(:Core),
-            JS.member_expression(
-              JS.identifier(:Functions),
-              JS.identifier(:defimpl)
-            )
-          )
+          JS.identifier(:__F),
+          JS.identifier(:defimpl)
         ),
         [
           JS.identifier(Utils.name_to_js_name(name)),

@@ -14,13 +14,7 @@ defmodule ElixirScript.Translator.Match do
         JS.array_pattern(params),
         JS.call_expression(
           JS.member_expression(
-            JS.member_expression(
-              JS.member_expression(
-              JS.identifier("Bootstrap"),
-              JS.identifier("Core")
-              ),
-              JS.identifier("Patterns")
-            ),
+            JS.identifier("__P"),
             JS.identifier("match")
           ),
           [hd(patterns), right_ast]

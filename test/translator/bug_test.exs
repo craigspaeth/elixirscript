@@ -10,7 +10,7 @@ defmodule ElixirScript.Translator.Bug.Test do
     end
 
     js_code = """
-      const test = Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([],function(){
+      const test = __P.defmatch(__P.clause([],function(){
         return Symbol.for('atom');
       }));
     """
@@ -61,7 +61,7 @@ defmodule ElixirScript.Translator.Bug.Test do
     end
 
     js_code = """
-      Bootstrap.Core.Functions.call_property(this, 'getRawCanvas').getContext('2d')
+      __F.call_property(this, 'getRawCanvas').getContext('2d')
     """
 
     assert_translation(ex_ast, js_code)
@@ -94,15 +94,15 @@ defmodule ElixirScript.Translator.Bug.Test do
 
 
     js_code = """
-     const getDispatcher = Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([],function()    {
+     const getDispatcher = __P.defmatch(__P.clause([],function()    {
              return     DeLorean.Flux.createDispatcher(Object.freeze({
-             [Symbol.for('startPainting')]: Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([],function()    {
+             [Symbol.for('startPainting')]: __P.defmatch(__P.clause([],function()    {
              return     this.dispatch('startPainting');
-           })),     [Symbol.for('stopPainting')]: Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([],function()    {
+           })),     [Symbol.for('stopPainting')]: __P.defmatch(__P.clause([],function()    {
              return     this.dispatch('stopPainting');
-           })),     [Symbol.for('addPoint')]: Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()],function(data)    {
+           })),     [Symbol.for('addPoint')]: __P.defmatch(__P.clause([__P.variable()],function(data)    {
              return     this.dispatch('addPoint',data);
-           })),     [Symbol.for('getStores')]: Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([],function()    {
+           })),     [Symbol.for('getStores')]: __P.defmatch(__P.clause([],function()    {
              return     Object.freeze({
              [Symbol.for('graphic')]: GraphicStore
        });
@@ -123,8 +123,8 @@ defmodule ElixirScript.Translator.Bug.Test do
     end
 
     js_code = """
-    const my_func = Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()],function(x){
-      return Object.freeze([Bootstrap.Core.Functions.call_property(x,'a'), Bootstrap.Core.Functions.call_property(x,'b')]);
+    const my_func = __P.defmatch(__P.clause([__P.variable()],function(x){
+      return Object.freeze([__F.call_property(x,'a'), __F.call_property(x,'b')]);
     }));
     """
 

@@ -8,13 +8,7 @@ defmodule ElixirScript.Translator.JS do
 
   def call_property() do
     Builder.member_expression(
-      Builder.member_expression(
-        Builder.identifier("Bootstrap"),
-        Builder.member_expression(
-          Builder.identifier("Core"),
-          Builder.identifier("Functions")
-        )
-      ),
+      Builder.identifier("__F"),
       Builder.identifier("call_property")
     )
   end

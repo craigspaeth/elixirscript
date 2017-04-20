@@ -15,7 +15,7 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
          Bootstrap.Core.SpecialForms._try(function() {
              return 1;
-         }, Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([{
+         }, __P.defmatch(__P.clause([{
              [Symbol.for('__struct__')]: Symbol.for('Elixir.ElixirScript.ArgumentError')
          }], function() {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('Invalid argument given');
@@ -39,7 +39,7 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
          Bootstrap.Core.SpecialForms._try(function() {
              return 1;
-         }, Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([{
+         }, __P.defmatch(__P.clause([{
              [Symbol.for('__struct__')]: Symbol.for('Elixir.ElixirScript.ArgumentError')
          }], function() {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('Invalid argument given');
@@ -63,7 +63,7 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
          Bootstrap.Core.SpecialForms._try(function()    {
              return     1;
-           },Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()],function(x)    {
+           },__P.defmatch(__P.clause([__P.variable()],function(x)    {
            return     Elixir.ElixirScript.IO.__load(Elixir).puts('Invalid argument given');
            },function(x)    {
            return Elixir.ElixirScript.Bootstrap.Functions.__load(Elixir).contains(x, Object.freeze([Elixir.ElixirScript.ArgumentError.__load(Elixir).__struct__(Object.freeze({}))]));
@@ -87,7 +87,7 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
      Bootstrap.Core.SpecialForms._try(function()    {
              return     1;
-           },Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()],function(x)    {
+           },__P.defmatch(__P.clause([__P.variable()],function(x)    {
            return     Elixir.ElixirScript.IO.__load(Elixir).puts('Invalid argument given');
            })),null,null,null)
     """
@@ -112,11 +112,11 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
          Bootstrap.Core.SpecialForms._try(function() {
              return 1;
-         }, Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([{
+         }, __P.defmatch(__P.clause([{
              [Symbol.for('__struct__')]: Symbol.for('Elixir.ElixirScript.ArgumentError')
          }], function() {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('ArgumentError');
-         }), Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()], function(x) {
+         }), __P.clause([__P.variable()], function(x) {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('x');
          })), null, null, null)
     """
@@ -140,7 +140,7 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
          Bootstrap.Core.SpecialForms._try(function() {
              return 1;
-         }, Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([{
+         }, __P.defmatch(__P.clause([{
              [Symbol.for('__struct__')]: Symbol.for('Elixir.ElixirScript.ArgumentError')
          }], function() {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('Invalid argument given');
@@ -189,11 +189,11 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
     Bootstrap.Core.SpecialForms._try(function() {
       return 1 / x;
-    }, null, null, Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()], function(y) {
+    }, null, null, __P.defmatch(__P.clause([__P.variable()], function(y) {
       return Symbol.for('small');
     }, function(y) {
       return y < 1 && y > -1;
-    }), Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()], function(__ignored__) {
+    }), __P.clause([__P.variable()], function(__ignored__) {
       return Symbol.for('large');
     })), null)
     """
@@ -217,11 +217,11 @@ defmodule ElixirScript.Translator.Try.Test do
     js_code = """
          Bootstrap.Core.SpecialForms._try(function() {
              return 1;
-         }, Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([{
+         }, __P.defmatch(__P.clause([{
              [Symbol.for('__struct__')]: Symbol.for('Elixir.ElixirScript.ArgumentError')
          }], function() {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('Invalid argument given');
-         })), Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Symbol.for('throw'), Symbol.for('Error')], function() {
+         })), __P.defmatch(__P.clause([Symbol.for('throw'), Symbol.for('Error')], function() {
              return Elixir.ElixirScript.IO.__load(Elixir).puts('caught error');
          })), null, null)
     """

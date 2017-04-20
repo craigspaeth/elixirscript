@@ -60,7 +60,7 @@ defmodule ElixirScript.Translator.List.Test do
     end
 
     js_code = """
-    Bootstrap.Core.Patterns.defmatch(Bootstrap.Core.Patterns.clause([Bootstrap.Core.Patterns.variable()],function(__ignored__){
+    __P.defmatch(__P.clause([__P.variable()],function(__ignored__){
       return Object.freeze([x]).concat(list);
     }))
     """

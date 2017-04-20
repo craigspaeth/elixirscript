@@ -6,13 +6,7 @@ defmodule ElixirScript.Translator.Function do
   alias ElixirScript.Translator.PatternMatching
   alias ElixirScript.Translator.Block
 
-  @patterns JS.member_expression(
-    JS.member_expression(
-      JS.identifier("Bootstrap"),
-      JS.identifier("Core")
-    ),
-    JS.identifier("Patterns")
-  )
+  @patterns JS.identifier("__P")
 
   @spec make_anonymous_function(list(), ElixirScript.Translator.LexicalScope.t, binary | atom) :: tuple()
   def make_anonymous_function(functions, env, name \\ nil)

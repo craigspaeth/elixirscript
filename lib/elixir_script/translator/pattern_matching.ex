@@ -10,13 +10,7 @@ defmodule ElixirScript.Translator.PatternMatching do
   alias ElixirScript.Translator.Bitstring
   alias ElixirScript.Translator.Utils
 
-  @patterns JS.member_expression(
-    JS.member_expression(
-    JS.identifier("Bootstrap"),
-    JS.identifier("Core")
-    ),
-    JS.identifier("Patterns")
-  )
+  @patterns JS.identifier("__P")
 
   @wildcard JS.member_expression(
     @patterns,

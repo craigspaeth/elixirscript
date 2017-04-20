@@ -63,13 +63,7 @@ defmodule ElixirScript.Translator.Call do
 
     js_ast = JS.call_expression(
       JS.member_expression(
-        JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier("Core"),
-            JS.identifier("Functions")
-          )
-        ),
+        JS.identifier("__F"),
         JS.identifier("call_property")
       ),
       [
@@ -95,13 +89,7 @@ defmodule ElixirScript.Translator.Call do
   def make_function_or_property_call(module_name, function_name, env) do
     js_ast = JS.call_expression(
       JS.member_expression(
-        JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier("Core"),
-            JS.identifier("Functions")
-          )
-        ),
+        JS.identifier("__F"),
         JS.identifier("call_property")
       ),
       [
@@ -116,13 +104,7 @@ defmodule ElixirScript.Translator.Call do
   def make_function_call(module_name, function_name, [], env) when is_atom(module_name) and is_atom(function_name) do
     js_ast = JS.call_expression(
       JS.member_expression(
-        JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier("Core"),
-            JS.identifier("Functions")
-          )
-        ),
+        JS.identifier("__F"),
         JS.identifier("call_property")
       ),
       [
@@ -149,13 +131,7 @@ defmodule ElixirScript.Translator.Call do
   def make_function_call({{:., _, _}, _, _} = module_name, function_name, [], env) do
     js_ast = JS.call_expression(
       JS.member_expression(
-        JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier("Core"),
-            JS.identifier("Functions")
-          )
-        ),
+        JS.identifier("__F"),
         JS.identifier("call_property")
       ),
       [
@@ -182,13 +158,7 @@ defmodule ElixirScript.Translator.Call do
   def make_function_call(module_name, function_name, [], env) do
     js_ast = JS.call_expression(
       JS.member_expression(
-        JS.member_expression(
-          JS.identifier("Bootstrap"),
-          JS.member_expression(
-            JS.identifier("Core"),
-            JS.identifier("Functions")
-          )
-        ),
+        JS.identifier("__F"),
         JS.identifier("call_property")
       ),
       [

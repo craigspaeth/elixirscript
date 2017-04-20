@@ -28,13 +28,7 @@ defmodule ElixirScript.Translator.For do
 
     expression = JS.call_expression(
       JS.member_expression(
-        JS.member_expression(
-            JS.member_expression(
-              JS.identifier("Bootstrap"),
-              JS.identifier("Core")
-            ),
-            JS.identifier("Patterns")
-          ),
+        JS.identifier("__P"),
         JS.identifier("clause")
       ),
       [JS.array_expression(args.patterns), fun, filter]
@@ -66,13 +60,7 @@ defmodule ElixirScript.Translator.For do
 
       gen = JS.call_expression(
         JS.member_expression(
-          JS.member_expression(
-              JS.member_expression(
-                JS.identifier("Bootstrap"),
-                JS.identifier("Core")
-              ),
-              JS.identifier("Patterns")
-            ),
+          JS.identifier("__P"),
           JS.identifier("bitstring_generator")
         ),
         [hd(patterns), Translator.translate!(collection, env)]
@@ -85,13 +73,7 @@ defmodule ElixirScript.Translator.For do
 
         gen = JS.call_expression(
           JS.member_expression(
-            JS.member_expression(
-                JS.member_expression(
-                  JS.identifier("Bootstrap"),
-                  JS.identifier("Core")
-                ),
-                JS.identifier("Patterns")
-              ),
+            JS.identifier("__P"),
             JS.identifier("list_generator")
           ),
           [hd(patterns), Translator.translate!(enum, env)]

@@ -62,10 +62,10 @@ defmodule ElixirScript.Translator.Bitstring.Test do
   test "translate pattern matching bitstring" do
     ex_ast = quote do: <<name::binary-size(5), " the ", species::binary>> = <<"Frank the Walrus">>
     js_code = """
-    let [name,species] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.bitStringMatch(Bootstrap.Core.BitString.size(Bootstrap.Core.BitString.binary({
-    'value': Bootstrap.Core.Patterns.variable()
+    let [name,species] = __P.match(__P.bitStringMatch(Bootstrap.Core.BitString.size(Bootstrap.Core.BitString.binary({
+    'value': __P.variable()
     }),5),Bootstrap.Core.BitString.binary(' the '),Bootstrap.Core.BitString.binary({
-    'value': Bootstrap.Core.Patterns.variable()
+    'value': __P.variable()
     })),'Frank the Walrus');
     """
 
@@ -74,8 +74,8 @@ defmodule ElixirScript.Translator.Bitstring.Test do
 
     ex_ast = quote do: <<int::integer>> = <<-100>>
     js_code = """
-    let [int] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.bitStringMatch(Bootstrap.Core.BitString.integer({
-    'value': Bootstrap.Core.Patterns.variable()
+    let [int] = __P.match(__P.bitStringMatch(Bootstrap.Core.BitString.integer({
+    'value': __P.variable()
     })),new Bootstrap.Core.BitString(Bootstrap.Core.BitString.binary(-100)));
     """
 
@@ -84,8 +84,8 @@ defmodule ElixirScript.Translator.Bitstring.Test do
 
     ex_ast = quote do: <<-100::signed, _rest::binary>> = <<-100, "foo">>
     js_code = """
-    let [_rest] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.bitStringMatch(Bootstrap.Core.BitString.signed(-100),Bootstrap.Core.BitString.binary({
-    'value': Bootstrap.Core.Patterns.variable()
+    let [_rest] = __P.match(__P.bitStringMatch(Bootstrap.Core.BitString.signed(-100),Bootstrap.Core.BitString.binary({
+    'value': __P.variable()
     })),new Bootstrap.Core.BitString(Bootstrap.Core.BitString.binary(-100),Bootstrap.Core.BitString.binary('foo')));
     """
 

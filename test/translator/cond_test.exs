@@ -42,13 +42,13 @@ defmodule ElixirScript.Translator.Cond.Test do
 
     js_code = """
          Bootstrap.Core.SpecialForms.cond(Object.freeze([1 + 1 == 1, function()    {
-             let [a] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(),1);
+             let [a] = __P.match(__P.variable(),1);
              return     'This will never match';
            }]),Object.freeze([2 * 2 != 4, function()    {
-             let [a] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(),2);
+             let [a] = __P.match(__P.variable(),2);
              return     'Nor this';
            }]),Object.freeze([true, function()    {
-             let [a] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(),3);
+             let [a] = __P.match(__P.variable(),3);
              return     'This will';
            }]))
     """

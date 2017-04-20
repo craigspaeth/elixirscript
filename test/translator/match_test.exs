@@ -4,12 +4,12 @@ defmodule ElixirScript.Translator.Match.Test do
 
   test "translate simple match" do
     ex_ast = quote do: a = 1
-    js_code = "let [a] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(), 1);"
+    js_code = "let [a] = __P.match(__P.variable(), 1);"
 
     assert_translation(ex_ast, js_code)
 
     ex_ast = quote do: a = :atom
-    js_code = "let [a] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(), Symbol.for('atom'));"
+    js_code = "let [a] = __P.match(__P.variable(), Symbol.for('atom'));"
 
     assert_translation(ex_ast, js_code)
   end
@@ -19,10 +19,10 @@ defmodule ElixirScript.Translator.Match.Test do
       {a, b} = {1, 2}
     end
     js_code = """
-    let [a, b] = Bootstrap.Core.Patterns.match(
+    let [a, b] = __P.match(
       new Bootstrap.Core.Tuple(
-        Bootstrap.Core.Patterns.variable(), 
-        Bootstrap.Core.Patterns.variable()
+        __P.variable(), 
+        __P.variable()
       ), 
       new Bootstrap.Core.Tuple(1, 2)
     );
@@ -32,7 +32,7 @@ defmodule ElixirScript.Translator.Match.Test do
 
     ex_ast = quote do: {a, _, c} = {1, 2, 3}
     js_code = """
-         let [a, __ignored__, c] = Bootstrap.Core.Patterns.match(new Bootstrap.Core.Tuple(Bootstrap.Core.Patterns.variable(), Bootstrap.Core.Patterns.variable(), Bootstrap.Core.Patterns.variable()), new Bootstrap.Core.Tuple(1, 2, 3));
+         let [a, __ignored__, c] = __P.match(new Bootstrap.Core.Tuple(__P.variable(), __P.variable(), __P.variable()), new Bootstrap.Core.Tuple(1, 2, 3));
     """
 
     assert_translation(ex_ast, js_code)
@@ -43,7 +43,7 @@ defmodule ElixirScript.Translator.Match.Test do
        {^a, _, c} = {1, 2, 3}
     end
     js_code = """
-    let [, __ignored__, c] = Bootstrap.Core.Patterns.match(new Bootstrap.Core.Tuple(Bootstrap.Core.Patterns.bound(a), Bootstrap.Core.Patterns.variable(), Bootstrap.Core.Patterns.variable()), new Bootstrap.Core.Tuple(1, 2, 3));
+    let [, __ignored__, c] = __P.match(new Bootstrap.Core.Tuple(__P.bound(a), __P.variable(), __P.variable()), new Bootstrap.Core.Tuple(1, 2, 3));
     """
 
     assert_translation(ex_ast, js_code)
@@ -56,7 +56,7 @@ defmodule ElixirScript.Translator.Match.Test do
     end
 
     js_code = """
-     let [] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.bound(a),1);
+     let [] = __P.match(__P.bound(a),1);
     """
 
     assert_translation(ex_ast, js_code)
@@ -65,7 +65,7 @@ defmodule ElixirScript.Translator.Match.Test do
   test "translate list match" do
     ex_ast = quote do: [a, b] = [1, 2]
     js_code = """
-         let [a,b] = Bootstrap.Core.Patterns.match(Object.freeze([Bootstrap.Core.Patterns.variable(), Bootstrap.Core.Patterns.variable()]),Object.freeze([1, 2]));
+         let [a,b] = __P.match(Object.freeze([__P.variable(), __P.variable()]),Object.freeze([1, 2]));
          let _ref = Object.freeze([a, b]);
     """
 
@@ -75,7 +75,7 @@ defmodule ElixirScript.Translator.Match.Test do
   test "translate head/tail match" do
     ex_ast = quote do: [a | b] = [1, 2, 3, 4]
     js_code = """
-    let [a,b] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.headTail(Bootstrap.Core.Patterns.variable(),Bootstrap.Core.Patterns.variable()),Object.freeze([1, 2, 3, 4]));
+    let [a,b] = __P.match(__P.headTail(__P.variable(),__P.variable()),Object.freeze([1, 2, 3, 4]));
     let _ref = Object.freeze([a, b]);
     """
 

@@ -105,7 +105,7 @@ defmodule ElixirScript.Translator.Struct.Test do
     end
 
     js_code = """
-    let [user] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(), Object.freeze(Object.assign({}, map, Object.freeze({
+    let [user] = __P.match(__P.variable(), Object.freeze(Object.assign({}, map, Object.freeze({
         [Symbol.for('key')]: 1
     }))));
     """
@@ -119,7 +119,7 @@ defmodule ElixirScript.Translator.Struct.Test do
     end
 
     js_code = """
-    let [user] = Bootstrap.Core.Patterns.match(Bootstrap.Core.Patterns.variable(), Object.freeze(Object.assign({}, map, Object.freeze({
+    let [user] = __P.match(__P.variable(), Object.freeze(Object.assign({}, map, Object.freeze({
         [Symbol.for('key')]: 1,
         [Symbol.for('key1')]: 11
     }))));
