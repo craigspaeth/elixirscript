@@ -48,8 +48,25 @@ defmodule ElixirScript.Compiler.Test do
   end
 
   test "Compiles module functions correctly" do
-    result = ElixirScript.Compiler.compile(Main, [])
-    out = System.cmd "node", ["-e \"console.log('hi')\""]
-    IO.inspect out
+    bootstrap = ElixirScript.Compiler.compile(TestModuleB, [format: :common])
+    code = """
+      #{bootstrap};
+      Elixir.start(Elixir.TestModuleB, [(ret) => {
+        console.log(JSON.stringify(ret))
+      }])
+    """
+    bootstrap = ElixirScript.Compiler.compile(TestModuleB, [format: :umd])
+    html = """
+      <html>
+        <head>
+          <script>#{bootstrap}</script>
+          <script></script>
+        </head>
+      </html>
+    """
+    File.write "./tmp/compiled.html", html
+    {out, _} = System.cmd "node", ["-e", code]
+    val = Poison.decode! String.trim out
+    assert val == [1, 2, 3]
   end
-end
+end 
