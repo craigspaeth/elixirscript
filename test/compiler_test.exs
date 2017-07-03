@@ -46,4 +46,10 @@ defmodule ElixirScript.Compiler.Test do
     result = ElixirScript.Compiler.compile(Atom, [output: path])
     assert File.exists?(path)
   end
+
+  test "Compiles module functions correctly" do
+    result = ElixirScript.Compiler.compile(Main, [])
+    out = System.cmd "node", ["-e \"console.log('hi')\""]
+    IO.inspect out
+  end
 end
