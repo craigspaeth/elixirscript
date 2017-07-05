@@ -69,4 +69,27 @@ defmodule ElixirScript.Compiler.Test do
     val = Poison.decode! String.trim out
     assert val == [1, 2, 3]
   end
+
+  test "Compiles cond functions correctly" do
+    bootstrap = ElixirScript.Compiler.compile(TestModuleB, [format: :common])
+    code = """
+      #{bootstrap};
+      Elixir.start(Elixir.TestModuleB, [(ret) => {
+        console.log(JSON.stringify(ret))
+      }])
+    """
+    bootstrap = ElixirScript.Compiler.compile(TestModuleB, [format: :umd])
+    html = """
+      <html>
+        <head>
+          <script>#{bootstrap}</script>
+          <script></script>
+        </head>
+      </html>
+    """
+    File.write "./tmp/compiled.html", html
+    {out, _} = System.cmd "node", ["-e", code]
+    val = Poison.decode! String.trim out
+    assert val == [1, 2, 3]
+  end
 end 
