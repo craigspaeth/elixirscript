@@ -98,8 +98,13 @@ defmodule ElixirScript.FindUsedFunctions do
     walk(tail, state)
   end
 
+<<<<<<< HEAD
   defp walk({:::, _, [target, _type]}, state) do
     walk(target, state)
+=======
+  defp walk({:::, _, _}, _) do
+    nil
+>>>>>>> 20f893d... Remove a bunch of warnings
   end
 
   defp walk(form, state) when is_list(form) do
